@@ -11,6 +11,7 @@ version = "0.1.0"
 [dependencies]
 cfg-if = "1.0"
 serde = {version = "1.0.204", default-features = false, features = ["derive", "alloc"]}
+arrayvec = { version = "0.7", default-features = false }
 # System independent crates provided by ArceOS.
 axaddrspace = "0.2.0"
 axerrno = "0.1.0"

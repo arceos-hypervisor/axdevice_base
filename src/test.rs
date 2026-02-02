@@ -7,15 +7,30 @@ use crate::{BaseDeviceOps, EmuDeviceType, map_device_of_type};
 
 const DEVICE_A_TEST_METHOD_ANSWER: usize = 42;
 
-struct DeviceA;
+struct DeviceA {
+    ranges: [GuestPhysAddrRange; 1],
+}
+
+impl DeviceA {
+    fn new() -> Self {
+        Self {
+            ranges: [(0x1000..0x2000).try_into().unwrap()],
+        }
+    }
+
+    /// A test method unique to DeviceA.
+    pub fn test_method(&self) -> usize {
+        DEVICE_A_TEST_METHOD_ANSWER
+    }
+}
 
 impl BaseDeviceOps<GuestPhysAddrRange> for DeviceA {
     fn emu_type(&self) -> EmuDeviceType {
         EmuDeviceType::Dummy
     }
 
-    fn address_range(&self) -> GuestPhysAddrRange {
-        (0x1000..0x2000).try_into().unwrap()
+    fn address_ranges(&self) -> &[GuestPhysAddrRange] {
+        &self.ranges
     }
 
     fn handle_read(&self, addr: GuestPhysAddr, _width: AccessWidth) -> AxResult<usize> {
@@ -27,22 +42,25 @@ impl BaseDeviceOps<GuestPhysAddrRange> for DeviceA {
     }
 }
 
-impl DeviceA {
-    /// A test method unique to DeviceA.
-    pub fn test_method(&self) -> usize {
-        DEVICE_A_TEST_METHOD_ANSWER
-    }
+struct DeviceB {
+    ranges: [GuestPhysAddrRange; 1],
 }
 
-struct DeviceB;
+impl DeviceB {
+    fn new() -> Self {
+        Self {
+            ranges: [(0x2000..0x3000).try_into().unwrap()],
+        }
+    }
+}
 
 impl BaseDeviceOps<GuestPhysAddrRange> for DeviceB {
     fn emu_type(&self) -> EmuDeviceType {
         EmuDeviceType::Dummy
     }
 
-    fn address_range(&self) -> GuestPhysAddrRange {
-        (0x2000..0x3000).try_into().unwrap()
+    fn address_ranges(&self) -> &[GuestPhysAddrRange] {
+        &self.ranges
     }
 
     fn handle_read(&self, addr: GuestPhysAddr, _width: AccessWidth) -> AxResult<usize> {
@@ -57,7 +75,7 @@ impl BaseDeviceOps<GuestPhysAddrRange> for DeviceB {
 #[test]
 fn test_device_type_test() {
     let devices: Vec<Arc<dyn BaseDeviceOps<GuestPhysAddrRange>>> =
-        vec![Arc::new(DeviceA), Arc::new(DeviceB)];
+        vec![Arc::new(DeviceA::new()), Arc::new(DeviceB::new())];
 
     let mut device_a_found = false;
     for device in devices {
