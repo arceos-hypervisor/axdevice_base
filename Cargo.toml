@@ -12,9 +12,9 @@ keywords = ["arceos", "hypervisor", "virtualization", "device", "no-std"]
 categories = ["no-std", "virtualization"]
 
 [dependencies]
-cfg-if = "1.0"
-serde = {version = "1.0.204", default-features = false, features = ["derive", "alloc"]}
-# System independent crates provided by ArceOS.
+serde = { version = "1.0.204", default-features = false, features = ["derive", "alloc"] }
+
+# ArceOS and AxVisor crates.
 axaddrspace = "0.3"
 axerrno = "0.2"
 axvmconfig = {version = "0.2", default-features = false}
