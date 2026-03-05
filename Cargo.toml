@@ -12,7 +12,7 @@ keywords = ["arceos", "hypervisor", "virtualization", "device", "no-std"]
 categories = ["no-std", "virtualization"]
 
 [dependencies]
-serde = { version = "1.0.204", default-features = false, features = ["derive", "alloc"] }
+serde = { version = "1.0", default-features = false, features = ["derive", "alloc"] }
 
 # ArceOS and AxVisor crates.
 axaddrspace = "0.3"
